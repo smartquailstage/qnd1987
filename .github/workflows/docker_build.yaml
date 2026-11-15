@@ -1,0 +1,42 @@
+name: SmartQuail Docker Build Apps qnd1987
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  app_test:
+    uses: smartquailstage/qnd1987/.github/workflows/app_test.yaml@main
+
+  Docker_container_build:
+    runs-on: ubuntu-latest
+    needs: [app_test]
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      DJANGO_SECRET_KEY: test-key-not-good
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build container image
+        run: | 
+          docker build -f Dockerfile               -t ghcr.io/smartquailstage/qnd1987:latest               -t ghcr.io/smartquailstage/qnd1987:${GITHUB_SHA::2}-${GITHUB_RUN_ID::2}               .
+
+      - name: Push Image to GHCR
+        run: | 
+          docker push ghcr.io/smartquailstage/qnd1987 --all-tags
