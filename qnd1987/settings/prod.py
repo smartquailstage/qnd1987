@@ -15,11 +15,24 @@ SITE_ID = 1
 domain = os.environ.get('SITE_DOMAIN', 'http://localhost:8000')
 
 # Orígenes permitidos para CORS (añadiendo desarrollo local y producción)
+DOMAIN = os.environ.get("DOMAIN", f"{PROJECT_NAME}.smartquail.io")
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     f"https://{PROJECT_NAME}.smartquail.io",
+    f"https://{DOMAIN}",
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    f"https://{PROJECT_NAME}.smartquail.io",
+    f"https://{DOMAIN}",
+    "https://*.smartquail.io",
+]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
