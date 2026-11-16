@@ -74,27 +74,32 @@ DATABASES = {
 }
 
 
-# Configuración de AWS
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_ENDPOINT_URL = os.environ.get("AWS_S3_ENDPOINT_URL")  # Ej: https://qnd031-static.s3.amazonaws.com
+# ==========================================
+# CONFIGURACIÓN DE ALMACENAMIENTO EN S3 (CDN)
+# ==========================================
 
-AWS_S3_OBJECT_PARAMETERS = {
-    "CacheControl": "max-age=86400",
-    "ACL": "public-read"  # Cambia a 'private' si los archivos deben ser privados
+# 1. Definir un STATIC_ROOT temporal para que collectstatic los recopile antes de subirlos al S3
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build')
+
+# 2. Clases de almacenamiento para Django (compatible con django-storages moderno)
+# Si usas Django 4.2 o superior, se recomienda usar el diccionario STORAGES:
+STORAGES = {
+    "default": {
+        "BACKEND": os.environ.get("MEDIA_STORAGE", "storages.backends.s3.S3Storage"),
+    },
+    "staticfiles": {
+        "BACKEND": os.environ.get("STATICFILES_STORAGE", "storages.backends.s3.S3Storage"),
+    },
 }
 
+# (Opcional por compatibilidad con versiones anteriores de Django)
+DEFAULT_FILE_STORAGE = os.environ.get("MEDIA_STORAGE", "storages.backends.s3.S3Storage")
+STATICFILES_STORAGE = os.environ.get("STATICFILES_STORAGE", "storages.backends.s3.S3Storage")
 
-# Configuración de almacenamiento
-# Carpetas de static y media dentro del bucket
-AWS_LOCATION = os.environ.get("AWS_LOCATION")  # default = qn041app
-
-# Asegúrate de que la URL de los archivos estáticos esté correcta
+# Configuración de URLs del Bucket
+AWS_LOCATION = os.environ.get("AWS_LOCATION", "static")
 STATIC_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/static/'
-MEDIA_URL =  f'{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/media/'
-DEFAULT_FILE_STORAGE = os.environ.get("MEDIA_STORAGE")
-STATICFILES_STORAGE =  os.environ.get("STATICFILES_STORAGE")
+MEDIA_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/media/'
 
 
 
