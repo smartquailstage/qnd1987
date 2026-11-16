@@ -32,10 +32,12 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.smartquail.io",
 ]
 
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+#SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
+
+
 
 
 REDIS_HOST = os.environ.get('REDIS_HOST')  # Cambia esto según tu configuración
