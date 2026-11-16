@@ -7,6 +7,9 @@ django-extensions>=3.2.3
 psycopg[binary]>=3.2.0
 pgvector>=0.3.0
 
+django-storages>=1.14.0
+boto3>=1.28.0
+
 # === Admin & UI ===
 django-unfold>=0.45.0
 django-widget-tweaks>=1.5.0
@@ -46,3 +49,5 @@ django-debug-toolbar>=4.3.0
 
 # === Utilidades & Códigos QR ===
 qrcode>=7.4.2
+
+
