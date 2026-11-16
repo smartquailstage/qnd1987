@@ -14,6 +14,7 @@ boto3>=1.28.0
 django-unfold>=0.45.0
 django-widget-tweaks>=1.5.0
 django-import-export>=4.0.0
+django-cors-headers
 
 # === Gestión Financiera, ERP & Auditoría Contable ===
 django-money>=3.5.0
